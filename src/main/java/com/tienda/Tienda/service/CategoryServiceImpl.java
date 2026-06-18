@@ -7,6 +7,8 @@ import com.tienda.Tienda.exception.CategoriaNotFoundException;
 import com.tienda.Tienda.model.Categoria;
 import com.tienda.Tienda.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    @Cacheable(value = "categorias", key = "#id")
     public CategoriaDTO obtenerPorId(Long id) {
         return toDTO(categoriaRepository.findById(id)
                 .orElseThrow(() -> new CategoriaNotFoundException(id)));
@@ -39,20 +42,22 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    @CacheEvict(value = "categorias", key = "#id")
     public CategoriaDTO actualizar(Long id, CategoriaRequestDTO requestDTO) {
         var existente = categoriaRepository.findById(id)
-                .orElseThrow(()-> new CategoriaNotFoundException(id));
+                .orElseThrow(() -> new CategoriaNotFoundException(id));
         existente.setNombre(requestDTO.nombre());
         existente.setDescripcion(requestDTO.descripcion());
         return toDTO(categoriaRepository.save(existente));
     }
 
     @Override
+    @CacheEvict(value = "categorias", key = "#id")
     public void eliminar(Long id) {
-    if (!categoriaRepository.existsById(id)){
-        throw new CategoriaNotFoundException(id);
-    }
-    categoriaRepository.deleteById(id);
+        if (!categoriaRepository.existsById(id)) {
+            throw new CategoriaNotFoundException(id);
+        }
+        categoriaRepository.deleteById(id);
     }
 
     private CategoriaDTO toDTO(Categoria categoria){

@@ -1,0 +1,21 @@
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: postgres_tienda
+    environment:
+      POSTGRES_DB: tienda
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 6272
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis-tienda
+    ports:
+      - "6379:6379"
+volumes:
+  postgres-data:
