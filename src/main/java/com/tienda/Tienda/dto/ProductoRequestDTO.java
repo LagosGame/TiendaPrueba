@@ -5,7 +5,7 @@ import jakarta.validation.constraints.*;
 
 public record ProductoRequestDTO(
         @NotBlank(message = "El nombre no puede estar vacío.")
-        @Size(min = 3, max = 100, message = "El mensaje debe tener entre 3 y 100 caracteres")
+        @Size(min = 3, max = 100, message = "El nombre debe tener entre 3 y 100 caracteres")
         String nombre,
         @NotNull(message = "El precio es obligatorio")
         @Positive(message = "El precio debe ser mayor que 0")
